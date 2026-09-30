@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(ROOT, '_build'))
 import contact as C
 import md as MD
 
-def head(title, desc, path, image=SITE + '/pf/p01/01.webp', extra=''):
+def head(title, desc, path, image=SITE + '/pf/p01/02.webp', extra=''):
     return f'''<!doctype html>
 <html lang="th">
 <head>
