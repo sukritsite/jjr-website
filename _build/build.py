@@ -9,6 +9,7 @@ TODAY = datetime.date.today().isoformat()
 E = html.escape
 sys.path.insert(0, os.path.join(ROOT, '_build'))
 import contact as C
+import md as MD
 
 def head(title, desc, path, image=SITE + '/pf/p01/01.webp', extra=''):
     return f'''<!doctype html>
@@ -132,6 +133,19 @@ PAGE_CSS = '''<style>
   .posts{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
   .posts a{display:block;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);background:#fff;height:100%}
   .posts img{aspect-ratio:16/9;object-fit:cover;width:100%}.posts .tx{padding:18px 22px 22px}.posts h2{font-size:20px;margin:0 0 8px;color:var(--ink);line-height:1.4}.posts p{margin:0;color:var(--muted);font-size:14.5px}
+  .tbl{overflow-x:auto;margin:18px 0 22px;border-radius:12px;border:1px solid var(--line)}
+  .tbl table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px;line-height:1.6}
+  .tbl th,.tbl td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  .tbl thead th{background:var(--band);color:var(--ink);font-weight:600} .tbl tbody tr:last-child td{border-bottom:0}
+  .tbl td:first-child{color:var(--ink);font-weight:500}
+  .tldr{margin:22px 0;padding:16px 20px;border-radius:14px;background:var(--accent-soft);border-left:4px solid var(--accent)}
+  .tldr p{margin:0 0 6px;color:var(--ink)} .tldr ul{margin:0}
+  .vid{margin:18px auto 22px;max-width:340px} .vid video{width:100%;height:auto;border-radius:16px;background:#000;box-shadow:var(--shadow-card);display:block}
+  .vid figcaption,.gal figcaption{font-size:13.5px;color:var(--muted);margin-top:8px;text-align:center}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 8px} .gal figure{margin:0;min-width:0}
+  .gal figure:first-child{grid-column:1/-1} .gal img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px}
+  article h1 .nb{display:inline-block} article a[href^="tel:"]{white-space:nowrap}
+  article code{background:var(--band);padding:1px 6px;border-radius:6px;font-size:.92em}
   footer{background:var(--dark);color:rgba(255,255,255,.72);padding-block:44px 24px;font-size:14px;flex-shrink:0}
   .ft{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:28px}
   .ft h4{margin:0 0 10px;color:#fff;font-size:15px}
@@ -142,6 +156,7 @@ PAGE_CSS = '''<style>
   .soc svg{width:20px;height:20px}
   .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:16px;font-size:13px}
   @media (max-width:760px){ .ft{grid-template-columns:1fr} .band h1{font-size:28px} .hdr-tel{display:none} }
+  @media (max-width:520px){ .gal{grid-template-columns:1fr} .tbl table{min-width:0;font-size:14px} .tbl th,.tbl td{padding:9px 10px} }
   @media (max-width:760px){ .nav{display:none} .cta{margin-left:auto} article h1{font-size:27px} }
 </style>
 '''
@@ -178,21 +193,23 @@ def clean_wp(c):
     c = re.sub(r'<p>\s*(&nbsp;)?\s*</p>', '', c)
     return c.strip()
 
-def post_page(slug, title, desc, date, modified, body_html, cover):
+def post_page(slug, title, desc, date, modified, body_html, cover, cover_wh=(1024, 576), og=None, ld_type='BlogPosting', extra_ld=(), seo_title=None, cover_alt=None):
     iso = date[:10]
-    ld = {"@context": "https://schema.org", "@type": "BlogPosting", "headline": title, "description": desc,
-          "datePublished": date, "dateModified": modified, "image": SITE + cover, "inLanguage": "th",
+    ld = {"@context": "https://schema.org", "@type": ld_type, "headline": title, "description": desc,
+          "datePublished": date, "dateModified": modified, "image": SITE + (og or cover), "inLanguage": "th",
           "mainEntityOfPage": f"{SITE}/{slug}/",
           "author": {"@type": "Organization", "name": "JJR โซล่าเซลล์", "url": SITE + "/"},
           "publisher": {"@type": "Organization", "name": "บริษัท จงเจริญ โซลาร์เซลล์ จำกัด", "logo": {"@type": "ImageObject", "url": SITE + "/icon-512.png"}}}
     th_date = f'{int(iso[8:10])} ' + ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][int(iso[5:7]) - 1] + f' {int(iso[:4]) + 543}'
-    page = head(f'{title} | JJR โซล่าเซลล์', desc, f'/{slug}/', SITE + cover,
-                FONTS + PAGE_CSS + f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n') + '</head>\n<body>\n' + HEADER + f'''<main class="wrap">
+    h1_html = ' '.join(f'<span class="nb">{E(x)}</span>' for x in re.split(r'(?<=\?) ', title))
+    lds = ''.join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in (ld, *extra_ld))
+    page = head(f'{seo_title or title} | JJR โซล่าเซลล์', desc, f'/{slug}/', SITE + (og or cover), FONTS + PAGE_CSS + lds).replace(
+        '<meta property="og:type" content="website">', '<meta property="og:type" content="article">') + '</head>\n<body>\n' + HEADER + f'''<main class="wrap">
 <article>
   <div class="crumb"><a href="/">หน้าแรก</a> › <a href="/blog/">บทความ</a></div>
-  <h1>{E(title)}</h1>
+  <h1>{h1_html}</h1>
   <div class="meta"><span><span class="ms">calendar_today</span> {th_date}</span><span>JJR โซล่าเซลล์</span></div>
-  <figure class="cover" style="margin:0 0 28px"><img src="{cover}" alt="{E(title)}" width="1024" height="576"></figure>
+  <figure class="cover" style="margin:0 0 28px"><img src="{cover}" alt="{E(cover_alt or title)}" width="{cover_wh[0]}" height="{cover_wh[1]}"></figure>
 {body_html}
 {CTA}
 </article>
@@ -250,6 +267,38 @@ body2 = '''<h2>JJR โซล่าเซลล์ พลังงานสะอ
 <p style="color:var(--muted);font-size:14px">jjrโซล่าเซลล์, โซล่าเซลล์อุบล, อุบลโซล่าเซลล์, ติดตั้งโซล่าเซลล์</p>'''
 post_page('jjrsolarcell', t2, desc2, d['date'], d['modified'], body2, '/img/blog/jjrsolarcell.webp')
 posts.append(('jjrsolarcell', t2, desc2, d['date']))
+
+# บทความ 3: On-Grid กับ Hybrid (ทีมคอนเทนต์ส่งมาเป็น .md · ส่วน [[รอช่างยืนยัน]] ถูกซ่อนอัตโนมัติจนกว่าจะเติมคำตอบใน _build/posts/*.md)
+slug3 = 'on-grid-vs-hybrid-solar-home'
+A3 = '/img/blog/on-grid-vs-hybrid/'
+md3 = open(f'_build/posts/{slug3}.md', encoding='utf8').read()
+old_hours = '**เวลาเปิด:** จันทร์ – เสาร์ 08.00 – 17.00 น.'   # ให้ตรงกับเวลาทำการของทั้งเว็บ (contact.py)
+if old_hours in md3: md3 = md3.replace(old_hours, '**เวลาเปิด:** ' + C.HOURS.replace('เปิดทำการ', ''))
+GAL3 = [('01', 1200, 676, 'งานติดตั้งโซลาร์เซลล์บ้านพักอาศัย ระบบ On-Grid 5 kW · อุบลราชธานี', 'On-Grid 5 kW · ไม่มีแบตเตอรี่'),
+        ('02', 887, 665, 'อินเวอร์เตอร์และแบตเตอรี่ระบบ Hybrid ติดตั้งผนังในบ้านลูกค้า', 'Hybrid · อินเวอร์เตอร์ + แบตเตอรี่'),
+        ('03', 1200, 676, 'งานติดตั้งโซลาร์เซลล์ระบบ Hybrid และ On-Grid ภาพมุมสูง', 'งานติดตั้งจริงของทีม JJR'),
+        ('04', 1200, 676, 'งานติดตั้งโซลาร์เซลล์บ้านพักอาศัย ภาพมุมสูง', 'บ้านพักอาศัย'),
+        ('05', 1200, 676, 'งานติดตั้งโซลาร์เซลล์บ้านพักอาศัยในหมู่บ้าน ภาพมุมสูง', 'บ้านในหมู่บ้าน')]
+gal3 = '<div class="gal">' + ''.join(
+    f'<figure><a href="{A3}g{n}-{w}.webp" target="_blank" rel="noopener"><img src="{A3}g{n}-640.webp" srcset="{A3}g{n}-640.webp 640w, {A3}g{n}-{w}.webp {w}w" '
+    f'sizes="(max-width:760px) 100vw, 380px" alt="{E(alt)}" width="{w}" height="{h}" loading="lazy" decoding="async"></a><figcaption>{E(cap)}</figcaption></figure>'
+    for n, w, h, alt, cap in GAL3) + '</div>'
+vid3 = (f'<figure class="vid"><video controls playsinline preload="none" poster="{A3}hybrid-38s.webp" width="720" height="1280">'
+        f'<source src="{A3}hybrid-38s.mp4" type="video/mp4"></video><figcaption>คลิป 38 วินาที · ระบบไฮบริดใช้ไฟจากไหนก่อน (เปิดเสียงได้)</figcaption></figure>')
+body3, faq3 = MD.convert(md3, {'[วิดีโอ': vid3, '[แกลเลอรี': gal3})
+assert MD.PENDING not in body3
+t3 = 'On-Grid กับ Hybrid ต่างกันยังไง? เลือกโซลาร์เซลล์บ้านแบบไหนดี'
+desc3 = 'ออนกริดกับไฮบริดต่างกันตรงไหน แบตเตอรี่จำเป็นไหม ไฟดับใช้ได้ไหม บ้านแบบไหนเหมาะกับระบบไหน พร้อมตัวเลขจริงจากบ้าน 84 หลังที่ JJR ติดตั้งในอีสาน'
+date3 = '2026-09-30T09:00:00+07:00'
+ld_faq = {"@context": "https://schema.org", "@type": "FAQPage",
+          "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq3]}
+ld_vid = {"@context": "https://schema.org", "@type": "VideoObject", "name": "ระบบไฮบริด ใช้ไฟจากไหนก่อน",
+          "description": "ลำดับการใช้ไฟของโซลาร์เซลล์ระบบไฮบริด: แดดก่อน แบตเป็นลำดับที่สอง การไฟฟ้าเป็นลำดับสุดท้าย",
+          "thumbnailUrl": SITE + A3 + 'hybrid-38s.webp', "contentUrl": SITE + A3 + 'hybrid-38s.mp4', "uploadDate": date3, "duration": "PT38S"}
+post_page(slug3, t3, desc3, date3, date3, body3, '/img/blog/on-grid-vs-hybrid-solar-home.webp', (1200, 630), og=A3 + 'cover.jpg',
+          ld_type='Article', extra_ld=[x for x in (ld_faq if faq3 else None, ld_vid) if x],
+          seo_title='On-Grid กับ Hybrid ต่างกันยังไง? โซลาร์เซลล์บ้านแบบไหนดี', cover_alt='เทียบระบบโซลาร์เซลล์ On-Grid (ไม่มีแบตเตอรี่) กับ Hybrid (มีแบตเตอรี่) จากงานติดตั้งจริงของ JJR')
+posts.append((slug3, t3, desc3, date3))
 
 # ---------------------------------------------------------------- blog index
 posts.sort(key=lambda p: p[3], reverse=True)

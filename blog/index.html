@@ -60,6 +60,19 @@
   .posts{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
   .posts a{display:block;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);background:#fff;height:100%}
   .posts img{aspect-ratio:16/9;object-fit:cover;width:100%}.posts .tx{padding:18px 22px 22px}.posts h2{font-size:20px;margin:0 0 8px;color:var(--ink);line-height:1.4}.posts p{margin:0;color:var(--muted);font-size:14.5px}
+  .tbl{overflow-x:auto;margin:18px 0 22px;border-radius:12px;border:1px solid var(--line)}
+  .tbl table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px;line-height:1.6}
+  .tbl th,.tbl td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  .tbl thead th{background:var(--band);color:var(--ink);font-weight:600} .tbl tbody tr:last-child td{border-bottom:0}
+  .tbl td:first-child{color:var(--ink);font-weight:500}
+  .tldr{margin:22px 0;padding:16px 20px;border-radius:14px;background:var(--accent-soft);border-left:4px solid var(--accent)}
+  .tldr p{margin:0 0 6px;color:var(--ink)} .tldr ul{margin:0}
+  .vid{margin:18px auto 22px;max-width:340px} .vid video{width:100%;height:auto;border-radius:16px;background:#000;box-shadow:var(--shadow-card);display:block}
+  .vid figcaption,.gal figcaption{font-size:13.5px;color:var(--muted);margin-top:8px;text-align:center}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 8px} .gal figure{margin:0;min-width:0}
+  .gal figure:first-child{grid-column:1/-1} .gal img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px}
+  article h1 .nb{display:inline-block} article a[href^="tel:"]{white-space:nowrap}
+  article code{background:var(--band);padding:1px 6px;border-radius:6px;font-size:.92em}
   footer{background:var(--dark);color:rgba(255,255,255,.72);padding-block:44px 24px;font-size:14px;flex-shrink:0}
   .ft{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:28px}
   .ft h4{margin:0 0 10px;color:#fff;font-size:15px}
@@ -70,6 +83,7 @@
   .soc svg{width:20px;height:20px}
   .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:16px;font-size:13px}
   @media (max-width:760px){ .ft{grid-template-columns:1fr} .band h1{font-size:28px} .hdr-tel{display:none} }
+  @media (max-width:520px){ .gal{grid-template-columns:1fr} .tbl table{min-width:0;font-size:14px} .tbl th,.tbl td{padding:9px 10px} }
   @media (max-width:760px){ .nav{display:none} .cta{margin-left:auto} article h1{font-size:27px} }
 </style>
 </head>
@@ -81,7 +95,7 @@
   <a class="cta" href="/#quote">ขอใบเสนอราคา</a>
 </div></header>
 <section class="band"><div class="wrap"><div class="crumb"><a href="/">หน้าแรก</a> › บทความ</div><h1>บทความ</h1><p>ความรู้เรื่องโซล่าเซลล์ การเลือกขนาดระบบ และเรื่องน่ารู้ก่อนติดตั้ง จากทีม JJR โซล่าเซลล์</p></div></section>
-<main class="wrap"><ul class="posts"><li><a href="/jjrsolarcell/"><div class="ph"><img src="/img/blog/jjrsolarcell.webp" alt="JJR โซล่าเซลล์ บริการติดตั้งโซล่าเซลล์ แบบครบวงจร" loading="lazy" width="1024" height="576"></div><div class="tx"><div class="d"><span class="ms">calendar_today</span>28 ก.พ. 2567</div><h2>JJR โซล่าเซลล์ บริการติดตั้งโซล่าเซลล์ แบบครบวงจร</h2><p>JJR โซล่าเซลล์ พลังงานสะอาดเพื่ออนาคต บริการติดตั้งโซล่าเซลล์ครบวงจร ตั้งแต่ออกแบบ ติดตั้ง ตรวจสอบ จนถึงดูแลรักษา โดยทีมช่างผู้ชำนาญ</p><span class="more">อ่านต่อ <span class="ms">arrow_forward</span></span></div></a></li><li><a href="/benefits-of-solar-cells/"><div class="ph"><img src="/img/blog/benefits-of-solar-cells.webp" alt="ประโยชน์ของโซล่าเซลล์" loading="lazy" width="1024" height="576"></div><div class="tx"><div class="d"><span class="ms">calendar_today</span>15 ก.ย. 2566</div><h2>ประโยชน์ของโซล่าเซลล์</h2><p>เรียนรู้เกี่ยวกับประโยชน์หลัก ๆ ของโซล่าเซลล์ และทำไมคุณควรเริ่มใช้พลังงานจากแสงอาทิตย์</p><span class="more">อ่านต่อ <span class="ms">arrow_forward</span></span></div></a></li></ul><div class="box"><div><b>อยากรู้ว่าโรงงานหรือบ้านของคุณควรติดกี่ kW</b><span>ส่งข้อมูลให้ทีม JJR สำรวจหน้างานฟรี ไม่มีข้อผูกมัด</span></div>
+<main class="wrap"><ul class="posts"><li><a href="/on-grid-vs-hybrid-solar-home/"><div class="ph"><img src="/img/blog/on-grid-vs-hybrid-solar-home.webp" alt="On-Grid กับ Hybrid ต่างกันยังไง? เลือกโซลาร์เซลล์บ้านแบบไหนดี" loading="lazy" width="1024" height="576"></div><div class="tx"><div class="d"><span class="ms">calendar_today</span>30 ก.ย. 2569</div><h2>On-Grid กับ Hybrid ต่างกันยังไง? เลือกโซลาร์เซลล์บ้านแบบไหนดี</h2><p>ออนกริดกับไฮบริดต่างกันตรงไหน แบตเตอรี่จำเป็นไหม ไฟดับใช้ได้ไหม บ้านแบบไหนเหมาะกับระบบไหน พร้อมตัวเลขจริงจากบ้าน 84 หลังที่ JJR ติดตั้งในอีสาน</p><span class="more">อ่านต่อ <span class="ms">arrow_forward</span></span></div></a></li><li><a href="/jjrsolarcell/"><div class="ph"><img src="/img/blog/jjrsolarcell.webp" alt="JJR โซล่าเซลล์ บริการติดตั้งโซล่าเซลล์ แบบครบวงจร" loading="lazy" width="1024" height="576"></div><div class="tx"><div class="d"><span class="ms">calendar_today</span>28 ก.พ. 2567</div><h2>JJR โซล่าเซลล์ บริการติดตั้งโซล่าเซลล์ แบบครบวงจร</h2><p>JJR โซล่าเซลล์ พลังงานสะอาดเพื่ออนาคต บริการติดตั้งโซล่าเซลล์ครบวงจร ตั้งแต่ออกแบบ ติดตั้ง ตรวจสอบ จนถึงดูแลรักษา โดยทีมช่างผู้ชำนาญ</p><span class="more">อ่านต่อ <span class="ms">arrow_forward</span></span></div></a></li><li><a href="/benefits-of-solar-cells/"><div class="ph"><img src="/img/blog/benefits-of-solar-cells.webp" alt="ประโยชน์ของโซล่าเซลล์" loading="lazy" width="1024" height="576"></div><div class="tx"><div class="d"><span class="ms">calendar_today</span>15 ก.ย. 2566</div><h2>ประโยชน์ของโซล่าเซลล์</h2><p>เรียนรู้เกี่ยวกับประโยชน์หลัก ๆ ของโซล่าเซลล์ และทำไมคุณควรเริ่มใช้พลังงานจากแสงอาทิตย์</p><span class="more">อ่านต่อ <span class="ms">arrow_forward</span></span></div></a></li></ul><div class="box"><div><b>อยากรู้ว่าโรงงานหรือบ้านของคุณควรติดกี่ kW</b><span>ส่งข้อมูลให้ทีม JJR สำรวจหน้างานฟรี ไม่มีข้อผูกมัด</span></div>
 <a class="cta" href="/#quote">ขอใบเสนอราคาฟรี <span class="ms">arrow_forward</span></a></div></main>
 <footer><div class="wrap">
   <div class="ft">
