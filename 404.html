@@ -25,7 +25,7 @@
 <style>
   :root{--accent:#0A9447;--accent-soft:#EAF6EF;--ink:#16202A;--body:#2B3440;--muted:#5B6573;--line:#E4E8EC;--bg:#FFFFFF;--band:#F6F8F7;--dark:#0F1A14;
     --f:"IBM Plex Sans Thai",system-ui,sans-serif;--shadow-card:0 1px 4px 0 rgba(12,12,13,.05),0 1px 4px 0 rgba(12,12,13,.10)}
-  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box} html,body{height:100%} body{display:flex;flex-direction:column;min-height:100vh;margin:0;background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
   a{color:var(--accent)} img{max-width:100%;height:auto;display:block}
   .ms{font-family:"Material Symbols Rounded";font-weight:normal;font-style:normal;font-size:20px;line-height:1;display:inline-block;vertical-align:-4px;font-feature-settings:"liga"}
   .wrap{max-width:1120px;margin-inline:auto;padding-inline:20px}
@@ -35,7 +35,18 @@
   .brand img{height:36px;width:auto}.brand b{display:block;font-size:15px;line-height:1.1}.brand small{display:block;color:#8A93A0;font-size:11px}
   .nav{display:flex;gap:22px;margin-left:auto;font-size:14.5px}.nav a{color:var(--muted);text-decoration:none}.nav a:hover{color:var(--accent)}
   .cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:9px 18px;border-radius:999px}
-  main{padding-block:40px 72px}
+  main{padding-block:40px 72px;flex:1 0 auto;width:100%}
+  .band{background:linear-gradient(180deg,#EAF6EF,#F6F8F7);border-bottom:1px solid var(--line)}
+  .band .wrap{padding-block:44px 38px}
+  .band h1{font-size:36px;color:var(--ink);margin:6px 0 8px;line-height:1.25}
+  .band p{margin:0;color:var(--muted);max-width:60ch}
+  .band .crumb{margin:0}
+  .hdr-tel{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14.5px;color:var(--ink);text-decoration:none;white-space:nowrap}
+  .hdr-tel .ms{color:var(--accent)}
+  .posts .d{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .posts .more{display:inline-flex;align-items:center;gap:4px;margin-top:12px;color:var(--accent);font-weight:600;font-size:14.5px}
+  .posts a:hover img{transform:scale(1.04)} .posts img{transition:transform .5s ease}
+  .posts .ph{overflow:hidden}
   .crumb{font-size:13.5px;color:var(--muted);margin-bottom:14px}.crumb a{color:var(--muted);text-decoration:none}
   article{max-width:760px;margin-inline:auto}
   article h1{font-size:34px;line-height:1.3;color:var(--ink);margin:0 0 10px;text-wrap:balance}
@@ -46,11 +57,19 @@
   .cover{border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);margin:0 0 28px}
   .box{margin-top:40px;padding:22px 24px;border-radius:16px;background:var(--accent-soft);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   .box b{display:block;color:var(--ink);font-size:18px}.box span{color:var(--muted);font-size:14.5px}.box div{flex:1;min-width:220px}
-  .posts{list-style:none;padding:0;margin:24px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .posts{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
   .posts a{display:block;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);background:#fff;height:100%}
-  .posts img{aspect-ratio:16/9;object-fit:cover;width:100%}.posts div{padding:16px 18px 18px}.posts h2{font-size:18px;margin:0 0 6px;color:var(--ink);line-height:1.4}.posts p{margin:0;color:var(--muted);font-size:14.5px}
-  footer{background:var(--dark);color:rgba(255,255,255,.7);padding-block:32px;font-size:14px}
-  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap} footer a{color:#fff}
+  .posts img{aspect-ratio:16/9;object-fit:cover;width:100%}.posts .tx{padding:18px 22px 22px}.posts h2{font-size:20px;margin:0 0 8px;color:var(--ink);line-height:1.4}.posts p{margin:0;color:var(--muted);font-size:14.5px}
+  footer{background:var(--dark);color:rgba(255,255,255,.72);padding-block:44px 24px;font-size:14px;flex-shrink:0}
+  .ft{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:28px}
+  .ft h4{margin:0 0 10px;color:#fff;font-size:15px}
+  .ft a,.ft .r{display:flex;align-items:center;gap:8px;padding-block:3px;color:rgba(255,255,255,.72);text-decoration:none}
+  .ft a:hover{color:#fff} .ft .ms{font-size:18px;color:#5BE092}
+  .ft .co{color:#fff;font-weight:600;font-size:16px;margin-bottom:6px}
+  .soc{display:flex;gap:10px;margin:4px 0 10px} .soc a{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.08);display:grid;place-items:center;padding:0}
+  .soc svg{width:20px;height:20px}
+  .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:16px;font-size:13px}
+  @media (max-width:760px){ .ft{grid-template-columns:1fr} .band h1{font-size:28px} .hdr-tel{display:none} }
   @media (max-width:760px){ .nav{display:none} .cta{margin-left:auto} article h1{font-size:27px} }
 </style>
 </head>
@@ -58,14 +77,21 @@
 <header class="hdr"><div class="wrap">
   <a class="brand" href="/"><img src="/pf/jjr.webp" alt="JJR Solar" width="54" height="36"><span><b>JJR โซล่าเซลล์</b><small>บจก. จงเจริญ โซลาร์เซลล์</small></span></a>
   <nav class="nav"><a href="/#work">ผลงาน</a><a href="/#clients">ลูกค้า</a><a href="/#calc">คำนวณ</a><a href="/blog/">บทความ</a></nav>
+  <a class="hdr-tel" href="tel:0942646142"><span class="ms">call</span>094-264-6142</a>
   <a class="cta" href="/#quote">ขอใบเสนอราคา</a>
 </div></header>
 <main class="wrap" style="text-align:center;padding-block:90px"><h1 style="font-size:64px;color:var(--accent);margin:0">404</h1><p style="font-size:18px;color:var(--ink)">ไม่พบหน้าที่คุณต้องการ</p><p><a class="cta" href="/"><span class="ms">arrow_back</span> กลับหน้าแรก</a></p></main>
 <footer><div class="wrap">
-  <div><b style="color:#fff">บริษัท จงเจริญ โซลาร์เซลล์ จำกัด</b><br>ติดตั้งกับช่างที่ชำนาญ บริการใกล้บ้านคุณ<br>71/36 ถ.เลี่ยงเมือง ต.ในเมือง อ.เมืองอุบลราชธานี จ.อุบลราชธานี 34000 (ตรงข้ามแม็คโครอุบลฯ) · <a href="https://s.jjrsolarcell.com/mr" target="_blank" rel="noopener">แผนที่</a><br>
-  โทร <a href="tel:0942646142">094-264-6142</a> · LINE <a href="https://s.jjrsolarcell.com/lr" target="_blank" rel="noopener">@jjrsolarrooftop</a> · เปิดทำการทุกวัน 08.00–17.00 น.</div>
-  <div><a href="/">หน้าแรก</a> · <a href="/blog/">บทความ</a> · <a href="/privacy-policy/">นโยบายความเป็นส่วนตัว</a><br>
-  <a href="https://s.jjrsolarcell.com/tr" target="_blank" rel="noopener">TikTok</a> · <a href="https://s.jjrsolarcell.com/yt" target="_blank" rel="noopener">YouTube</a></div>
+  <div class="ft">
+    <div><div class="co">JJR โซล่าเซลล์</div>บริษัท จงเจริญ โซลาร์เซลล์ จำกัด<br>ติดตั้งกับช่างที่ชำนาญ บริการใกล้บ้านคุณ · ให้บริการติดตั้งทั่วภาคอีสาน
+      <div class="r" style="margin-top:12px;align-items:flex-start"><span class="ms">location_on</span><span>71/36 ถ.เลี่ยงเมือง ต.ในเมือง อ.เมืองอุบลราชธานี จ.อุบลราชธานี 34000<br>(ตรงข้ามแม็คโครอุบลฯ) · <a href="https://s.jjrsolarcell.com/mr" target="_blank" rel="noopener" style="display:inline;color:#fff">แผนที่</a></span></div>
+      <div class="r"><span class="ms">schedule</span>เปิดทำการทุกวัน 08.00–17.00 น.</div></div>
+    <div><h4>ติดต่อ</h4><a href="tel:0942646142"><span class="ms">call</span>094-264-6142</a><a href="https://s.jjrsolarcell.com/lr" target="_blank" rel="noopener"><span class="ms">chat</span>LINE @jjrsolarrooftop</a><div class="r"><span class="ms">mail</span>jjrsolarcell@gmail.com</div><a href="/#quote"><span class="ms">request_quote</span>ขอใบเสนอราคา</a></div>
+    <div><h4>ติดตามเรา</h4>
+      <div class="soc"><a href="https://s.jjrsolarcell.com/lr" target="_blank" rel="noopener" aria-label="LINE"><svg viewBox="0 0 24 24" fill="#06C755" aria-hidden="true"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a href="https://s.jjrsolarcell.com/tr" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a><a href="https://s.jjrsolarcell.com/yt" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="#FF0000" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a></div>
+      <a href="/blog/"><span class="ms">article</span>บทความ</a><a href="/privacy-policy/"><span class="ms">shield</span>นโยบายความเป็นส่วนตัว</a></div>
+  </div>
+  <div class="copy">© 2569 บริษัท จงเจริญ โซลาร์เซลล์ จำกัด</div>
 </div></footer>
 </body>
 </html>

@@ -97,7 +97,7 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel
 PAGE_CSS = '''<style>
   :root{--accent:#0A9447;--accent-soft:#EAF6EF;--ink:#16202A;--body:#2B3440;--muted:#5B6573;--line:#E4E8EC;--bg:#FFFFFF;--band:#F6F8F7;--dark:#0F1A14;
     --f:"IBM Plex Sans Thai",system-ui,sans-serif;--shadow-card:0 1px 4px 0 rgba(12,12,13,.05),0 1px 4px 0 rgba(12,12,13,.10)}
-  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box} html,body{height:100%} body{display:flex;flex-direction:column;min-height:100vh;margin:0;background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
   a{color:var(--accent)} img{max-width:100%;height:auto;display:block}
   .ms{font-family:"Material Symbols Rounded";font-weight:normal;font-style:normal;font-size:20px;line-height:1;display:inline-block;vertical-align:-4px;font-feature-settings:"liga"}
   .wrap{max-width:1120px;margin-inline:auto;padding-inline:20px}
@@ -107,7 +107,18 @@ PAGE_CSS = '''<style>
   .brand img{height:36px;width:auto}.brand b{display:block;font-size:15px;line-height:1.1}.brand small{display:block;color:#8A93A0;font-size:11px}
   .nav{display:flex;gap:22px;margin-left:auto;font-size:14.5px}.nav a{color:var(--muted);text-decoration:none}.nav a:hover{color:var(--accent)}
   .cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:9px 18px;border-radius:999px}
-  main{padding-block:40px 72px}
+  main{padding-block:40px 72px;flex:1 0 auto;width:100%}
+  .band{background:linear-gradient(180deg,#EAF6EF,#F6F8F7);border-bottom:1px solid var(--line)}
+  .band .wrap{padding-block:44px 38px}
+  .band h1{font-size:36px;color:var(--ink);margin:6px 0 8px;line-height:1.25}
+  .band p{margin:0;color:var(--muted);max-width:60ch}
+  .band .crumb{margin:0}
+  .hdr-tel{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14.5px;color:var(--ink);text-decoration:none;white-space:nowrap}
+  .hdr-tel .ms{color:var(--accent)}
+  .posts .d{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .posts .more{display:inline-flex;align-items:center;gap:4px;margin-top:12px;color:var(--accent);font-weight:600;font-size:14.5px}
+  .posts a:hover img{transform:scale(1.04)} .posts img{transition:transform .5s ease}
+  .posts .ph{overflow:hidden}
   .crumb{font-size:13.5px;color:var(--muted);margin-bottom:14px}.crumb a{color:var(--muted);text-decoration:none}
   article{max-width:760px;margin-inline:auto}
   article h1{font-size:34px;line-height:1.3;color:var(--ink);margin:0 0 10px;text-wrap:balance}
@@ -118,25 +129,40 @@ PAGE_CSS = '''<style>
   .cover{border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);margin:0 0 28px}
   .box{margin-top:40px;padding:22px 24px;border-radius:16px;background:var(--accent-soft);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   .box b{display:block;color:var(--ink);font-size:18px}.box span{color:var(--muted);font-size:14.5px}.box div{flex:1;min-width:220px}
-  .posts{list-style:none;padding:0;margin:24px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .posts{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
   .posts a{display:block;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);background:#fff;height:100%}
-  .posts img{aspect-ratio:16/9;object-fit:cover;width:100%}.posts div{padding:16px 18px 18px}.posts h2{font-size:18px;margin:0 0 6px;color:var(--ink);line-height:1.4}.posts p{margin:0;color:var(--muted);font-size:14.5px}
-  footer{background:var(--dark);color:rgba(255,255,255,.7);padding-block:32px;font-size:14px}
-  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap} footer a{color:#fff}
+  .posts img{aspect-ratio:16/9;object-fit:cover;width:100%}.posts .tx{padding:18px 22px 22px}.posts h2{font-size:20px;margin:0 0 8px;color:var(--ink);line-height:1.4}.posts p{margin:0;color:var(--muted);font-size:14.5px}
+  footer{background:var(--dark);color:rgba(255,255,255,.72);padding-block:44px 24px;font-size:14px;flex-shrink:0}
+  .ft{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:28px}
+  .ft h4{margin:0 0 10px;color:#fff;font-size:15px}
+  .ft a,.ft .r{display:flex;align-items:center;gap:8px;padding-block:3px;color:rgba(255,255,255,.72);text-decoration:none}
+  .ft a:hover{color:#fff} .ft .ms{font-size:18px;color:#5BE092}
+  .ft .co{color:#fff;font-weight:600;font-size:16px;margin-bottom:6px}
+  .soc{display:flex;gap:10px;margin:4px 0 10px} .soc a{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.08);display:grid;place-items:center;padding:0}
+  .soc svg{width:20px;height:20px}
+  .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:16px;font-size:13px}
+  @media (max-width:760px){ .ft{grid-template-columns:1fr} .band h1{font-size:28px} .hdr-tel{display:none} }
   @media (max-width:760px){ .nav{display:none} .cta{margin-left:auto} article h1{font-size:27px} }
 </style>
 '''
-HEADER = '''<header class="hdr"><div class="wrap">
+HEADER = f'''<header class="hdr"><div class="wrap">
   <a class="brand" href="/"><img src="/pf/jjr.webp" alt="JJR Solar" width="54" height="36"><span><b>JJR โซล่าเซลล์</b><small>บจก. จงเจริญ โซลาร์เซลล์</small></span></a>
   <nav class="nav"><a href="/#work">ผลงาน</a><a href="/#clients">ลูกค้า</a><a href="/#calc">คำนวณ</a><a href="/blog/">บทความ</a></nav>
+  <a class="hdr-tel" href="tel:{C.PHONE_TEL}"><span class="ms">call</span>{C.PHONE}</a>
   <a class="cta" href="/#quote">ขอใบเสนอราคา</a>
 </div></header>
 '''
 FOOTER = f'''<footer><div class="wrap">
-  <div><b style="color:#fff">บริษัท จงเจริญ โซลาร์เซลล์ จำกัด</b><br>ติดตั้งกับช่างที่ชำนาญ บริการใกล้บ้านคุณ<br>{C.ADDRESS} ({C.ADDRESS_NOTE}) · <a href="{C.MAP_URL}" target="_blank" rel="noopener">แผนที่</a><br>
-  โทร <a href="tel:{C.PHONE_TEL}">{C.PHONE}</a> · LINE <a href="{C.LINE_URL}" target="_blank" rel="noopener">{C.LINE_ID}</a> · {C.HOURS}</div>
-  <div><a href="/">หน้าแรก</a> · <a href="/blog/">บทความ</a> · <a href="/privacy-policy/">นโยบายความเป็นส่วนตัว</a><br>
-  <a href="{C.TIKTOK_URL}" target="_blank" rel="noopener">TikTok</a> · <a href="{C.YOUTUBE_URL}" target="_blank" rel="noopener">YouTube</a></div>
+  <div class="ft">
+    <div><div class="co">JJR โซล่าเซลล์</div>บริษัท จงเจริญ โซลาร์เซลล์ จำกัด<br>ติดตั้งกับช่างที่ชำนาญ บริการใกล้บ้านคุณ · ให้บริการติดตั้งทั่วภาคอีสาน
+      <div class="r" style="margin-top:12px;align-items:flex-start"><span class="ms">location_on</span><span>{C.ADDRESS}<br>({C.ADDRESS_NOTE}) · <a href="{C.MAP_URL}" target="_blank" rel="noopener" style="display:inline;color:#fff">แผนที่</a></span></div>
+      <div class="r"><span class="ms">schedule</span>{C.HOURS}</div></div>
+    <div><h4>ติดต่อ</h4><a href="tel:{C.PHONE_TEL}"><span class="ms">call</span>{C.PHONE}</a><a href="{C.LINE_URL}" target="_blank" rel="noopener"><span class="ms">chat</span>LINE {C.LINE_ID}</a><div class="r"><span class="ms">mail</span>{C.EMAIL}</div><a href="/#quote"><span class="ms">request_quote</span>ขอใบเสนอราคา</a></div>
+    <div><h4>ติดตามเรา</h4>
+      <div class="soc"><a href="{C.LINE_URL}" target="_blank" rel="noopener" aria-label="LINE">{C.SVG_LINE}</a><a href="{C.TIKTOK_URL}" target="_blank" rel="noopener" aria-label="TikTok">{C.SVG_TIKTOK}</a><a href="{C.YOUTUBE_URL}" target="_blank" rel="noopener" aria-label="YouTube">{C.SVG_YOUTUBE}</a></div>
+      <a href="/blog/"><span class="ms">article</span>บทความ</a><a href="/privacy-policy/"><span class="ms">shield</span>นโยบายความเป็นส่วนตัว</a></div>
+  </div>
+  <div class="copy">© 2569 บริษัท จงเจริญ โซลาร์เซลล์ จำกัด</div>
 </div></footer>
 '''
 CTA = '''<div class="box"><div><b>อยากรู้ว่าโรงงานหรือบ้านของคุณควรติดกี่ kW</b><span>ส่งข้อมูลให้ทีม JJR สำรวจหน้างานฟรี ไม่มีข้อผูกมัด</span></div>
@@ -227,15 +253,20 @@ posts.append(('jjrsolarcell', t2, desc2, d['date']))
 
 # ---------------------------------------------------------------- blog index
 posts.sort(key=lambda p: p[3], reverse=True)
-items = ''.join(f'<li><a href="/{s}/"><img src="/img/blog/{s}.webp" alt="{E(t)}" loading="lazy" width="1024" height="576"><div><h2>{E(t)}</h2><p>{E(ds)}</p></div></a></li>' for s, t, ds, _ in posts)
-open('blog/index.html' if os.path.isdir('blog') else (os.makedirs('blog') or 'blog/index.html'), 'w', encoding='utf8').write(
+TH_M = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.']
+def th_date(iso): return f'{int(iso[8:10])} {TH_M[int(iso[5:7]) - 1]} {int(iso[:4]) + 543}'
+items = ''.join(f'<li><a href="/{s}/"><div class="ph"><img src="/img/blog/{s}.webp" alt="{E(t)}" loading="lazy" width="1024" height="576"></div><div class="tx"><div class="d"><span class="ms">calendar_today</span>{th_date(dt)}</div><h2>{E(t)}</h2><p>{E(ds)}</p><span class="more">อ่านต่อ <span class="ms">arrow_forward</span></span></div></a></li>' for s, t, ds, dt in posts)
+os.makedirs('blog', exist_ok=True)
+open('blog/index.html', 'w', encoding='utf8').write(
     head('บทความ | JJR โซล่าเซลล์', 'บทความและความรู้เรื่องโซล่าเซลล์จาก JJR โซล่าเซลล์', '/blog/', extra=FONTS + PAGE_CSS) + '</head>\n<body>\n' + HEADER +
-    f'<main class="wrap"><div class="crumb"><a href="/">หน้าแรก</a> › บทความ</div><h1 style="font-size:32px;color:var(--ink);margin:0">บทความ</h1><ul class="posts">{items}</ul></main>\n' + FOOTER + '</body>\n</html>\n')
+    '<section class="band"><div class="wrap"><div class="crumb"><a href="/">หน้าแรก</a> › บทความ</div><h1>บทความ</h1><p>ความรู้เรื่องโซล่าเซลล์ การเลือกขนาดระบบ และเรื่องน่ารู้ก่อนติดตั้ง จากทีม JJR โซล่าเซลล์</p></div></section>\n'
+    f'<main class="wrap"><ul class="posts">{items}</ul>{CTA}</main>\n' + FOOTER + '</body>\n</html>\n')
 
 # ---------------------------------------------------------------- privacy policy (ต้นฉบับเดิม + ข้อมูลจากฟอร์มเว็บไซต์)
 d = json.load(open('_src/privacy-policy.json', encoding='utf8'))[0]
 pp = clean_wp(d['content']['rendered'])
 pp = re.sub(r'https?://(www\.)?jjrsolarcell\.com/wp-content/uploads/[^"]+\.pdf', '/files/privacy-policy.pdf', pp)
+pp = re.sub(r'^\s*<h[1-3][^>]*>\s*นโยบายคุ้มครองข้อมูลส่วนบุคคล\s*</h[1-3]>', '', pp)  # ต้นฉบับซ้ำกับ h1
 pp = pp.replace('081-429-4693', C.PHONE).replace('0814294693', C.PHONE_TEL)
 pp += '''
 <h2>ข้อมูลที่เก็บจากแบบฟอร์มขอใบเสนอราคาบนเว็บไซต์</h2>
