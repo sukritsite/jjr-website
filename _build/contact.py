@@ -10,7 +10,7 @@ TIKTOK_URL = 'https://s.jjrsolarcell.com/tr'
 YOUTUBE_URL = 'https://s.jjrsolarcell.com/yt'
 ADDRESS = '71/36 ถ.เลี่ยงเมือง ต.ในเมือง อ.เมืองอุบลราชธานี จ.อุบลราชธานี 34000'
 ADDRESS_NOTE = 'ตรงข้ามแม็คโครอุบลฯ'
-HOURS = 'จันทร์–เสาร์ 08.00–17.00 น.'
+HOURS = 'เปิดทำการทุกวัน 08.00–17.00 น.'
 GEO = (15.2686084, 104.8354157)
 SAME_AS = ['https://lin.ee/O4JiyJR', 'https://www.tiktok.com/@jjrsolarcell', 'https://www.youtube.com/@JJR.solarcell']
 
