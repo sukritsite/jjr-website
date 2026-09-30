@@ -192,7 +192,7 @@ Hybrid ตอบโจทย์บ้านที่ **ใช้ไฟหนั�
 - **LINE:** @jjrsolarrooftop — https://s.jjrsolarcell.com/lr
 - **สำนักงานใหญ่:** 71/36 ถ.เลี่ยงเมือง ต.ในเมือง อ.เมืองอุบลราชธานี จ.อุบลราชธานี 34000 (ตรงข้ามแม็คโครอุบลฯ)
 - **แผนที่:** https://s.jjrsolarcell.com/mr
-- **เวลาเปิด:** จันทร์ – เสาร์ 08.00 – 17.00 น.
+- **เวลาเปิด:** ทุกวัน 08.00 – 17.00 น.
 - **ติดตามเรา:** TikTok https://s.jjrsolarcell.com/tr · YouTube https://s.jjrsolarcell.com/yt
 
 *บจก. จงเจริญ โซลาร์เซลล์ จำกัด — JJR Solar Rooftop*

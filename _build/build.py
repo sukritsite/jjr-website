@@ -272,8 +272,6 @@ posts.append(('jjrsolarcell', t2, desc2, d['date']))
 slug3 = 'on-grid-vs-hybrid-solar-home'
 A3 = '/img/blog/on-grid-vs-hybrid/'
 md3 = open(f'_build/posts/{slug3}.md', encoding='utf8').read()
-old_hours = '**เวลาเปิด:** จันทร์ – เสาร์ 08.00 – 17.00 น.'   # ให้ตรงกับเวลาทำการของทั้งเว็บ (contact.py)
-if old_hours in md3: md3 = md3.replace(old_hours, '**เวลาเปิด:** ' + C.HOURS.replace('เปิดทำการ', ''))
 GAL3 = [('01', 1200, 676, 'งานติดตั้งโซลาร์เซลล์บ้านพักอาศัย ระบบ On-Grid 5 kW · อุบลราชธานี', 'On-Grid 5 kW · ไม่มีแบตเตอรี่'),
         ('02', 887, 665, 'อินเวอร์เตอร์และแบตเตอรี่ระบบ Hybrid ติดตั้งผนังในบ้านลูกค้า', 'Hybrid · อินเวอร์เตอร์ + แบตเตอรี่'),
         ('03', 1200, 676, 'งานติดตั้งโซลาร์เซลล์ระบบ Hybrid และ On-Grid ภาพมุมสูง', 'งานติดตั้งจริงของทีม JJR'),
