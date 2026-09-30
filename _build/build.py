@@ -7,6 +7,8 @@ os.chdir(ROOT)
 SITE = 'https://jjrsolarcell.com'
 TODAY = datetime.date.today().isoformat()
 E = html.escape
+sys.path.insert(0, os.path.join(ROOT, '_build'))
+import contact as C
 
 def head(title, desc, path, image=SITE + '/pf/p01/01.webp', extra=''):
     return f'''<!doctype html>
@@ -48,8 +50,8 @@ src = src.replace('"logo": "https://jjrsolarcell.com/pf/jjr.webp"', '"logo": "ht
 # ฟอร์มจริง: ส่งไป Cloud Function submitLead แทนข้อความตัวอย่าง
 src = src.replace('<form id="qForm" novalidate>', '<form id="qForm" novalidate>\n        <input type="text" name="website" id="qWeb" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">', 1)
 src = re.sub(r'<div class="done" id="qDone" hidden>.*?</div></div>',
-             '<div class="done" id="qDone" hidden><span class="ms fill">check_circle</span><div><b>ได้รับข้อมูลแล้ว</b>ทีมงานจะโทรกลับภายในวันทำการ ถ้าต้องการด่วนโทร 081-429-4693</div></div>'
-             '\n        <div class="done err" id="qErr" hidden><span class="ms fill">error</span><div><b>ส่งข้อมูลไม่สำเร็จ</b><span id="qErrMsg">กรุณาลองใหม่ หรือโทร 081-429-4693</span></div></div>', src, count=1, flags=re.S)
+             '<div class="done" id="qDone" hidden><span class="ms fill">check_circle</span><div><b>ได้รับข้อมูลแล้ว</b>ทีมงานจะโทรกลับภายในวันทำการ ถ้าต้องการด่วนโทร 094-264-6142</div></div>'
+             '\n        <div class="done err" id="qErr" hidden><span class="ms fill">error</span><div><b>ส่งข้อมูลไม่สำเร็จ</b><span id="qErrMsg">กรุณาลองใหม่ หรือโทร 094-264-6142</span></div></div>', src, count=1, flags=re.S)
 old_submit = re.search(r"  // Draft only: validates.*?\n  \}\);\n", src, re.S)
 assert old_submit, 'form handler'
 src = src[:old_submit.start()] + r'''  // ส่งฟอร์มขอใบเสนอราคา → Cloud Function submitLead → งานโทรกลับในศูนย์งาน (tasks)
@@ -69,7 +71,7 @@ src = src[:old_submit.start()] + r'''  // ส่งฟอร์มขอใบ�
       msg: $('qMsg').value.trim(), consent: true, website: $('qWeb').value, page: location.href.slice(0, 200) }) })
       .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if (!r.ok || !j.ok) throw new Error(j.error || 'ส่งไม่สำเร็จ'); }); })
       .then(function(){ $('qForm').reset(); $('qDone').hidden = false; if (window.gtag) gtag('event', 'generate_lead'); })
-      .catch(function(err){ $('qErrMsg').textContent = (err && err.message) || 'กรุณาลองใหม่ หรือโทร 081-429-4693'; $('qErr').hidden = false; })
+      .catch(function(err){ $('qErrMsg').textContent = (err && err.message) || 'กรุณาลองใหม่ หรือโทร 094-264-6142'; $('qErr').hidden = false; })
       .then(function(){ btn.disabled = false; });
   });
 ''' + src[old_submit.end():]
@@ -130,9 +132,11 @@ HEADER = '''<header class="hdr"><div class="wrap">
   <a class="cta" href="/#quote">ขอใบเสนอราคา</a>
 </div></header>
 '''
-FOOTER = '''<footer><div class="wrap">
-  <div><b style="color:#fff">บริษัท จงเจริญ โซลาร์เซลล์ จำกัด</b><br>ติดตั้งกับช่างที่ชำนาญ บริการใกล้บ้านคุณ · โทร 081-429-4693 · jjrsolarcell@gmail.com</div>
-  <div><a href="/">หน้าแรก</a> · <a href="/blog/">บทความ</a> · <a href="/privacy-policy/">นโยบายความเป็นส่วนตัว</a></div>
+FOOTER = f'''<footer><div class="wrap">
+  <div><b style="color:#fff">บริษัท จงเจริญ โซลาร์เซลล์ จำกัด</b><br>ติดตั้งกับช่างที่ชำนาญ บริการใกล้บ้านคุณ<br>{C.ADDRESS} ({C.ADDRESS_NOTE}) · <a href="{C.MAP_URL}" target="_blank" rel="noopener">แผนที่</a><br>
+  โทร <a href="tel:{C.PHONE_TEL}">{C.PHONE}</a> · LINE <a href="{C.LINE_URL}" target="_blank" rel="noopener">{C.LINE_ID}</a> · {C.HOURS}</div>
+  <div><a href="/">หน้าแรก</a> · <a href="/blog/">บทความ</a> · <a href="/privacy-policy/">นโยบายความเป็นส่วนตัว</a><br>
+  <a href="{C.TIKTOK_URL}" target="_blank" rel="noopener">TikTok</a> · <a href="{C.YOUTUBE_URL}" target="_blank" rel="noopener">YouTube</a></div>
 </div></footer>
 '''
 CTA = '''<div class="box"><div><b>อยากรู้ว่าโรงงานหรือบ้านของคุณควรติดกี่ kW</b><span>ส่งข้อมูลให้ทีม JJR สำรวจหน้างานฟรี ไม่มีข้อผูกมัด</span></div>
@@ -209,10 +213,13 @@ body2 = '''<h2>JJR โซล่าเซลล์ พลังงานสะอ
 <p>ดูผลงานติดตั้งจริงของ JJR ทั้งโรงงาน อาคารพาณิชย์ หน่วยงาน และบ้านพักอาศัย ในอุบลราชธานี ศรีสะเกษ ยโสธร และสุรินทร์ ได้ที่ <a href="/#work">หน้าผลงาน</a></p>
 <h2>ช่องทางการติดต่อ</h2>
 <ul>
-<li>เบอร์โทรศัพท์: 081-429-4693</li>
-<li>อีเมล: jjrsolarcell@gmail.com</li>
+<li>เบอร์โทรศัพท์: <a href="tel:''' + C.PHONE_TEL + '''">''' + C.PHONE + '''</a></li>
+<li>LINE OA: <a href="''' + C.LINE_URL + '''" rel="noopener">''' + C.LINE_ID + '''</a></li>
+<li>อีเมล: ''' + C.EMAIL + '''</li>
 <li>ขอใบเสนอราคาออนไลน์: <a href="/#quote">กรอกฟอร์มที่นี่</a></li>
-<li>Facebook: <a href="https://facebook.com/jjr.detudom" rel="noopener">JJR โซล่าเซลล์</a></li>
+<li>สำนักงานใหญ่: ''' + C.ADDRESS + ' (' + C.ADDRESS_NOTE + ''') <a href="''' + C.MAP_URL + '''" rel="noopener">ดูแผนที่</a></li>
+<li>เวลาทำการ: ''' + C.HOURS + '''</li>
+<li>TikTok: <a href="''' + C.TIKTOK_URL + '''" rel="noopener">JJR Solar Rooftop</a> · YouTube: <a href="''' + C.YOUTUBE_URL + '''" rel="noopener">JJR Solar</a></li>
 </ul>
 <p style="color:var(--muted);font-size:14px">jjrโซล่าเซลล์, โซล่าเซลล์อุบล, อุบลโซล่าเซลล์, ติดตั้งโซล่าเซลล์</p>'''
 post_page('jjrsolarcell', t2, desc2, d['date'], d['modified'], body2, '/img/blog/jjrsolarcell.webp')
@@ -229,9 +236,10 @@ open('blog/index.html' if os.path.isdir('blog') else (os.makedirs('blog') or 'bl
 d = json.load(open('_src/privacy-policy.json', encoding='utf8'))[0]
 pp = clean_wp(d['content']['rendered'])
 pp = re.sub(r'https?://(www\.)?jjrsolarcell\.com/wp-content/uploads/[^"]+\.pdf', '/files/privacy-policy.pdf', pp)
+pp = pp.replace('081-429-4693', C.PHONE).replace('0814294693', C.PHONE_TEL)
 pp += '''
 <h2>ข้อมูลที่เก็บจากแบบฟอร์มขอใบเสนอราคาบนเว็บไซต์</h2>
-<p>เมื่อคุณกรอกแบบฟอร์มขอใบเสนอราคา เราเก็บชื่อ เบอร์โทรศัพท์ ประเภทสถานที่ ค่าไฟต่อเดือน พื้นที่ และรายละเอียดที่คุณกรอก เพื่อใช้ติดต่อกลับ สำรวจหน้างาน และจัดทำใบเสนอราคาเท่านั้น ข้อมูลจัดเก็บในระบบงานภายในของบริษัท และไม่ขายหรือเปิดเผยให้บุคคลภายนอก หากต้องการให้ลบหรือแก้ไขข้อมูล ติดต่อ 081-429-4693 หรือ jjrsolarcell@gmail.com</p>'''
+<p>เมื่อคุณกรอกแบบฟอร์มขอใบเสนอราคา เราเก็บชื่อ เบอร์โทรศัพท์ ประเภทสถานที่ ค่าไฟต่อเดือน พื้นที่ และรายละเอียดที่คุณกรอก เพื่อใช้ติดต่อกลับ สำรวจหน้างาน และจัดทำใบเสนอราคาเท่านั้น ข้อมูลจัดเก็บในระบบงานภายในของบริษัท และไม่ขายหรือเปิดเผยให้บุคคลภายนอก หากต้องการให้ลบหรือแก้ไขข้อมูล ติดต่อ 094-264-6142 หรือ jjrsolarcell@gmail.com</p>'''
 os.makedirs('privacy-policy', exist_ok=True)
 open('privacy-policy/index.html', 'w', encoding='utf8').write(
     head('นโยบายคุ้มครองข้อมูลส่วนบุคคล | JJR โซล่าเซลล์', 'นโยบายคุ้มครองข้อมูลส่วนบุคคลของ บริษัท จงเจริญ โซลาร์เซลล์ จำกัด ตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562', '/privacy-policy/', extra=FONTS + PAGE_CSS)
