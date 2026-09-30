@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /_build/
+Disallow: /_src/
+
+Sitemap: https://jjrsolarcell.com/sitemap.xml

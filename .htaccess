@@ -1,0 +1,73 @@
+# jjrsolarcell.com — static site (Plesk: Apache + nginx proxy)
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset utf-8
+AddType image/webp .webp
+AddType application/manifest+json .webmanifest
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# ไฟล์ต้นฉบับ/สคริปต์ build ไม่ต้องให้คนนอกเห็น
+RewriteRule ^(_build|_src|\.git)(/|$) - [R=404,L]
+RewriteRule ^(README\.md|\.gitignore)$ - [R=404,L]
+
+# บังคับ https + ใช้โดเมนหลักไม่มี www (subdomain อื่นไม่แตะ)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+RewriteCond %{HTTP_HOST} ^www\.jjrsolarcell\.com$ [NC]
+RewriteRule ^ https://jjrsolarcell.com%{REQUEST_URI} [R=301,L]
+
+# ---- URL เดิมของ WordPress → หน้าใหม่ (301 = รักษาอันดับ Google) ----
+RewriteRule ^contact/?$            /#quote   [R=301,NE,L]
+RewriteRule ^calculation/?$        /#calc    [R=301,NE,L]
+RewriteRule ^custom\.html$         /#calc    [R=301,NE,L]
+RewriteRule ^package/?$            /#quote   [R=301,NE,L]
+RewriteRule ^product/?$            /#clients [R=301,NE,L]
+RewriteRule ^solarcellequipment/?$ /#clients [R=301,NE,L]
+RewriteRule ^(category|tag|author)/ /blog/   [R=301,L]
+RewriteRule ^feed/?$               /blog/    [R=301,L]
+RewriteRule ^(sitemap_index|post-sitemap|page-sitemap|category-sitemap|wp-sitemap)\.xml$ /sitemap.xml [R=301,L]
+RewriteRule ^wp-content/uploads/.*\.pdf$ /files/privacy-policy.pdf [R=301,L]
+RewriteRule ^wp-(admin|login\.php|content|includes|json)(/|$) - [G,L]
+RewriteRule ^xmlrpc\.php$ - [G,L]
+</IfModule>
+
+# เว็บทดสอบ new.jjrsolarcell.com ห้าม Google เก็บ (กันเนื้อหาซ้ำกับเว็บจริง)
+<IfModule mod_setenvif.c>
+SetEnvIfNoCase Host ^new\.jjrsolarcell\.com$ JJR_STAGING
+</IfModule>
+<IfModule mod_headers.c>
+Header set X-Robots-Tag "noindex, nofollow" env=JJR_STAGING
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# บีบอัดไฟล์ข้อความ
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# cache: รูป/ไอคอนจำนาน, HTML ตรวจทุกครั้ง (แก้เว็บแล้วเห็นทันที)
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 1 hour"
+ExpiresByType text/html "access plus 0 seconds"
+ExpiresByType application/xml "access plus 1 day"
+ExpiresByType image/webp "access plus 30 days"
+ExpiresByType image/png "access plus 30 days"
+ExpiresByType image/x-icon "access plus 30 days"
+ExpiresByType image/vnd.microsoft.icon "access plus 30 days"
+</IfModule>
+<IfModule mod_headers.c>
+<FilesMatch "\.(webp|png|ico)$">
+Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+<FilesMatch "\.html$">
+Header set Cache-Control "no-cache"
+</FilesMatch>
+</IfModule>
