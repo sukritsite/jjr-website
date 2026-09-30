@@ -305,6 +305,7 @@
   .lb-cap{flex:1;min-width:0}
   .lb-cap b{display:block;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .lb-cap span{font-size:13px;color:rgba(255,255,255,.7)}
+  #lbSpec{display:flex;flex-wrap:wrap;gap:2px 14px} .lb-it{display:inline-flex;align-items:center;gap:4px} .lb-it .ms{font-size:16px;color:#5BE092}
   .lb-count{font-size:13px;color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums}
   .lb-x,.lb-nav{border:0;background:rgba(255,255,255,.12);color:#fff;border-radius:50%;width:42px;height:42px;display:grid;place-items:center;cursor:pointer;flex:none}
   .lb-x:hover,.lb-nav:hover{background:rgba(255,255,255,.22)}
@@ -652,14 +653,14 @@
     </div>
 
     <article class="feat">
-      <button type="button" class="feat-ph wk-ph" data-pics="[&quot;p01/01.webp&quot;]" data-name="บริษัท เตี่ยเหลียง ยางพารา จำกัด" data-spec="location_on อ.น้ำยืน · จ.อุบลราชธานี   bolt On-Grid 400 kW   solar_power AIKO 670W × 678 แผง" aria-label="ดูรูปผลงาน บริษัท เตี่ยเหลียง ยางพารา จำกัด">
-        <img src="pf/p01/01.webp" alt="ระบบโซล่าเซลล์ บริษัท เตี่ยเหลียง ยางพารา จำกัด" width="1600" height="900" loading="lazy" decoding="async">
+      <button type="button" class="feat-ph wk-ph" data-pics="[&quot;p01/01.webp&quot;, &quot;p01/02.webp&quot;, &quot;p01/03.webp&quot;]" data-name="บริษัท เตี่ยเหลียง ยางพารา จำกัด" data-spec="location_on อ.น้ำยืน · จ.อุบลราชธานี   bolt On-Grid 400 kW   solar_power AIKO 670W × 678 แผง" aria-label="ดูรูปผลงาน บริษัท เตี่ยเหลียง ยางพารา จำกัด">
+        <img src="pf/p01/01.webp" alt="ระบบโซล่าเซลล์ บริษัท เตี่ยเหลียง ยางพารา จำกัด" width="1600" height="900" loading="lazy" decoding="async"><span class="wk-n"><span class="ms">photo_library</span>3</span>
       </button>
       <div class="feat-b">
         <span class="tag tag-hi"><span class="ms fill">star</span>ผลงานเด่น · โรงงาน</span>
         <h3>บริษัท เตี่ยเหลียง ยางพารา จำกัด</h3>
         <div class="meta"><div><span class="ms">location_on</span>อ.น้ำยืน · จ.อุบลราชธานี</div><div class="kw"><span class="ms fill">bolt</span>On-Grid 400 kW</div><div><span class="ms">solar_power</span>AIKO 670W × 678 แผง</div><div><span class="ms">event</span>ติดตั้งปี 2569</div></div>
-        <button type="button" class="btn btn-o feat-go" data-open="feat"><span class="ms">zoom_in</span>ดูภาพขยาย</button>
+        <button type="button" class="btn btn-o feat-go" data-open="feat"><span class="ms">photo_library</span>ดูรูปทั้งหมด 3 รูป</button>
       </div>
     </article>
 
@@ -1065,7 +1066,15 @@
   }
   function openLb(btn){
     cur = JSON.parse(btn.dataset.pics);
-    $('lbName').textContent = btn.dataset.name; $('lbSpec').textContent = btn.dataset.spec;
+    $('lbName').textContent = btn.dataset.name;
+    // data-spec = "ไอคอน ข้อความ   ไอคอน ข้อความ" → ไอคอนจริง + ข้อความ (เดิมโชว์ชื่อไอคอนเป็นตัวอักษร)
+    var sp = $('lbSpec'); sp.textContent = '';
+    (btn.dataset.spec || '').split(/\s{3,}/).forEach(function(part){
+      var m = part.match(/^([a-z_]+) (.*)$/), it = document.createElement('span'); it.className = 'lb-it';
+      if (m) { var ic = document.createElement('span'); ic.className = 'ms'; ic.textContent = m[1]; it.appendChild(ic); it.appendChild(document.createTextNode(m[2])); }
+      else it.textContent = part;
+      sp.appendChild(it);
+    });
     var th = $('lbThumbs'); th.innerHTML = ''; th.hidden = cur.length < 2;
     cur.forEach(function(p, k){
       var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'รูปที่ ' + (k + 1));
