@@ -30,6 +30,8 @@ RewriteRule ^solarcellequipment/?$ /#clients [R=301,NE,L]
 RewriteRule ^(category|tag|author)/ /blog/   [R=301,L]
 RewriteRule ^feed/?$               /blog/    [R=301,L]
 RewriteRule ^(sitemap_index|post-sitemap|page-sitemap|category-sitemap|wp-sitemap)\.xml$ /sitemap.xml [R=301,L]
+# ลิงก์เก่าของ WordPress /index.php → หน้าแรก (เดิมขึ้น "File not found.")
+RewriteRule ^index\.php$ / [R=301,L]
 RewriteRule ^wp-content/uploads/.*\.pdf$ /files/privacy-policy.pdf [R=301,L]
 RewriteRule ^wp-(admin|login\.php|content|includes|json)(/|$) - [G,L]
 RewriteRule ^xmlrpc\.php$ - [G,L]
