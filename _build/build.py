@@ -84,7 +84,7 @@ src = src.replace('<a href="/blog/"><span class="ms">article</span>บทคว�
                   '<a href="/blog/"><span class="ms">article</span>บทความ</a>\n        <a href="/privacy-policy/"><span class="ms">shield</span>นโยบายความเป็นส่วนตัว</a>')
 # ไอคอนที่เพิ่มในหน้านี้ต้องอยู่ใน subset ของ Material Symbols ด้วย
 m = re.search(r'icon_names=([a-z0-9_,]+)', src)
-icons = sorted(set(m.group(1).split(',')) | {'check_circle', 'error', 'shield', 'arrow_back', 'calendar_today'})
+icons = sorted(set(m.group(1).split(',')) | {'check_circle', 'error', 'shield', 'arrow_back', 'calendar_today', 'menu', 'close', 'photo_library', 'solar_power', 'calculate', 'article', 'call'})
 src = src[:m.start(1)] + ','.join(icons) + src[m.end(1):]
 ICON_Q = ','.join(icons)
 
@@ -103,7 +103,15 @@ PAGE_CSS = '''<style>
   .ms{font-family:"Material Symbols Rounded";font-weight:normal;font-style:normal;font-size:20px;line-height:1;display:inline-block;vertical-align:-4px;font-feature-settings:"liga"}
   .wrap{max-width:1120px;margin-inline:auto;padding-inline:20px}
   .hdr{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
-  .hdr .wrap{display:flex;align-items:center;gap:20px;height:64px}
+  .hdr .wrap{display:flex;align-items:center;gap:20px;height:64px;position:relative}
+  /* เมนูมือถือ (☰): แสดงเมื่อจอแคบจนซ่อนเมนูหลัก */
+  .menu-btn{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);place-items:center;cursor:pointer;flex:none;padding:0}
+  .menu-btn .ms{font-size:24px}
+  .menu-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .mnav{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 12px 24px rgba(10,30,20,.08);padding:6px 16px 14px}
+  .mnav a{display:flex;align-items:center;gap:10px;padding:13px 4px;border-bottom:1px solid var(--line);color:var(--ink);font-size:16px;font-weight:500;text-decoration:none}
+  .mnav a:last-child{border-bottom:0;color:var(--accent);font-weight:600}
+  .mnav .ms{color:var(--accent);font-size:22px}
   .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
   .brand img{height:36px;width:auto}.brand b{display:block;font-size:15px;line-height:1.1}.brand small{display:block;color:#8A93A0;font-size:11px}
   .nav{display:flex;gap:22px;margin-left:auto;font-size:14.5px}.nav a{color:var(--muted);text-decoration:none}.nav a:hover{color:var(--accent)}
@@ -157,15 +165,35 @@ PAGE_CSS = '''<style>
   .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:16px;font-size:13px}
   @media (max-width:760px){ .ft{grid-template-columns:1fr} .band h1{font-size:28px} .hdr-tel{display:none} }
   @media (max-width:520px){ .gal{grid-template-columns:1fr} .tbl table{min-width:0;font-size:14px} .tbl th,.tbl td{padding:9px 10px} }
-  @media (max-width:760px){ .nav{display:none} .cta{margin-left:auto} article h1{font-size:27px} }
+  @media (max-width:760px){ .nav{display:none} .cta{margin-left:auto} .menu-btn{display:grid} article h1{font-size:27px} }
+  @media (max-width:760px){ .hdr .wrap{gap:10px} .brand small{display:none} .cta{padding:8px 14px;font-size:13.5px;white-space:nowrap} }
+  @media (max-width:380px){ .brand span{display:none} }   /* จอเล็กมาก: เหลือโลโก้ + ปุ่ม + เมนู */
 </style>
 '''
 HEADER = f'''<header class="hdr"><div class="wrap">
   <a class="brand" href="/"><img src="/pf/jjr.webp" alt="JJR Solar" width="54" height="36"><span><b>JJR โซล่าเซลล์</b><small>บจก. จงเจริญ โซลาร์เซลล์</small></span></a>
-  <nav class="nav"><a href="/#work">ผลงาน</a><a href="/#clients">ลูกค้า</a><a href="/#calc">คำนวณ</a><a href="/blog/">บทความ</a></nav>
+  <nav class="nav"><a href="/#work">ผลงาน</a><a href="/#service">บริการ</a><a href="/#calc">คำนวณค่าไฟ</a><a href="/blog/">บทความ</a></nav>
   <a class="hdr-tel" href="tel:{C.PHONE_TEL}"><span class="ms">call</span>{C.PHONE}</a>
   <a class="cta" href="/#quote">ขอใบเสนอราคา</a>
+    <button class="menu-btn" type="button" aria-label="เมนู" aria-expanded="false" aria-controls="mnav"><span class="ms">menu</span></button>
+    <nav class="mnav" id="mnav" hidden>
+      <a href="/#work"><span class="ms">photo_library</span>ผลงาน</a>
+      <a href="/#service"><span class="ms">solar_power</span>บริการ</a>
+      <a href="/#calc"><span class="ms">calculate</span>คำนวณค่าไฟ</a>
+      <a href="/blog/"><span class="ms">article</span>บทความ</a>
+      <a href="tel:0942646142"><span class="ms">call</span>โทร 094-264-6142</a>
+    </nav>
 </div></header>
+<script>
+(function(){{
+  var b=document.querySelector('.menu-btn'), m=document.getElementById('mnav'); if(!b||!m) return;
+  function set(open){{ m.hidden=!open; b.setAttribute('aria-expanded',String(open)); b.querySelector('.ms').textContent=open?'close':'menu'; }}
+  b.addEventListener('click',function(e){{ e.stopPropagation(); set(m.hidden); }});
+  m.addEventListener('click',function(e){{ if(e.target.closest('a')) set(false); }});
+  document.addEventListener('click',function(e){{ if(!m.hidden && !m.contains(e.target)) set(false); }});
+  document.addEventListener('keydown',function(e){{ if(e.key==='Escape') set(false); }});
+}})();
+</script>
 '''
 FOOTER = f'''<footer><div class="wrap">
   <div class="ft">
