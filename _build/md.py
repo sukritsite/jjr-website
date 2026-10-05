@@ -5,6 +5,8 @@
 import re, html
 
 PENDING = '[[รอช่างยืนยัน'
+# บล็อกครอบหลายย่อหน้า: [[รอยืนยัน <เรื่อง>]] … [[/รอยืนยัน]] → ตัดทั้งช่วง (เว้นแต่ส่งชื่อเรื่องใน confirmed)
+SPAN_RE = re.compile(r'\[\[รอยืนยัน\s*([^\]]*)\]\]([\s\S]*?)\[\[/รอยืนยัน\]\]')
 
 def inline(s):
     s = html.escape(s, quote=False)
@@ -29,10 +31,13 @@ def blocks(md):
     if cur: out.append(cur)
     return out
 
-def convert(md, hooks=None):
+def convert(md, hooks=None, confirmed=()):
     """คืน (html, faq) — faq = [(คำถาม, คำตอบข้อความล้วน)] สำหรับ FAQPage schema
-    hooks = {'[ข้อความในวงเล็บเหลี่ยมทั้งบรรทัด ขึ้นต้นด้วย]': html} ใช้แทนตำแหน่งวิดีโอ/แกลเลอรี"""
+    hooks = {'[ข้อความในวงเล็บเหลี่ยมทั้งบรรทัด ขึ้นต้นด้วย]': html} ใช้แทนตำแหน่งวิดีโอ/แกลเลอรี
+    confirmed = ชื่อเรื่องที่ยืนยันแล้ว เช่น ('e-Tax',) → เก็บเนื้อความ ลบแค่วงเล็บ"""
     hooks = hooks or {}
+    md = SPAN_RE.sub(lambda m: m.group(2) if m.group(1).strip() in confirmed else '', md)
+    md = re.sub(r'(?m)^[ \t]*[-*][ \t]*$\n?', '', md)   # รายการที่ว่างหลังตัดช่วงรอยืนยัน
     bl = blocks(md)
     # ตัด H1 + บรรทัดผู้เขียนตัวเอียงถัดไป (หน้าเว็บแสดงหัวเรื่อง/วันที่เอง)
     if bl and bl[0][0].startswith('# '): bl.pop(0)
@@ -57,7 +62,7 @@ def convert(md, hooks=None):
         chunk = '\n'.join(x for x in body if x)
         html_out.append(chunk)
         if in_faq and head.startswith('### '):
-            faq.append((text_of(inline(head[4:])), text_of('\n'.join(render(b, hooks) for b in g[1:]))))
+            faq.append((re.sub(r'^\d+\.\s*', '', text_of(inline(head[4:]))),text_of('\n'.join(render(b, hooks) for b in g[1:]))))
     return '\n'.join(html_out), faq
 
 def render(b, hooks):
@@ -90,7 +95,7 @@ def render_lines(lines):
         para.clear()
     def flush_l():
         nonlocal kind
-        items = [i for i in lst if PENDING not in i]
+        items = [i for i in lst if PENDING not in i and i.strip()]
         if items: out.append(f'<{kind}>' + ''.join(f'<li>{inline(i)}</li>' for i in items) + f'</{kind}>')
         lst.clear(); kind = None
     for l in lines:

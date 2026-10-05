@@ -201,7 +201,7 @@ def post_page(slug, title, desc, date, modified, body_html, cover, cover_wh=(102
           "author": {"@type": "Organization", "name": "JJR โซล่าเซลล์", "url": SITE + "/"},
           "publisher": {"@type": "Organization", "name": "บริษัท จงเจริญ โซลาร์เซลล์ จำกัด", "logo": {"@type": "ImageObject", "url": SITE + "/icon-512.png"}}}
     th_date = f'{int(iso[8:10])} ' + ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][int(iso[5:7]) - 1] + f' {int(iso[:4]) + 543}'
-    h1_html = ' '.join(f'<span class="nb">{E(x)}</span>' for x in re.split(r'(?<=\?) ', title))
+    h1_html = ' '.join(f'<span class="nb">{E(x)}</span>' for x in re.split(r'(?<=[?:]) ', title))
     lds = ''.join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in (ld, *extra_ld))
     page = head(f'{seo_title or title} | JJR โซล่าเซลล์', desc, f'/{slug}/', SITE + (og or cover), FONTS + PAGE_CSS + lds).replace(
         '<meta property="og:type" content="website">', '<meta property="og:type" content="article">') + '</head>\n<body>\n' + HEADER + f'''<main class="wrap">
@@ -297,6 +297,24 @@ post_page(slug3, t3, desc3, date3, date3, body3, '/img/blog/on-grid-vs-hybrid-so
           ld_type='Article', extra_ld=[x for x in (ld_faq if faq3 else None, ld_vid) if x],
           seo_title='On-Grid กับ Hybrid ต่างกันยังไง? โซลาร์เซลล์บ้านแบบไหนดี', cover_alt='เทียบระบบโซลาร์เซลล์ On-Grid (ไม่มีแบตเตอรี่) กับ Hybrid (มีแบตเตอรี่) จากงานติดตั้งจริงของ JJR')
 posts.append((slug3, t3, desc3, date3))
+
+# บทความ 4: เงินอุดหนุนโซลาร์ 50,000 บาท (ทีมคอนเทนต์ 5 ต.ค. 69) — ข่าวเปลี่ยนเร็ว: ถ้ามีมติ ครม./หลักเกณฑ์ ให้แก้ _build/posts/*.md
+# ช่วง [[รอยืนยัน e-Tax]] … [[/รอยืนยัน]] (สิทธิ์ลดหย่อนภาษี) ซ่อนจนกว่าโป้งยืนยันว่า JJR ออก e-Tax Invoice ได้ → ใส่ 'e-Tax' ใน CONFIRMED4
+slug4 = 'solar-subsidy-50000-baht-update'
+CONFIRMED4 = ()
+md4 = open(f'_build/posts/{slug4}.md', encoding='utf8').read()
+body4, faq4 = MD.convert(md4, confirmed=CONFIRMED4)
+assert '[[รอ' not in body4 and '[[/รอ' not in body4
+t4 = 'เงินอุดหนุนโซลาร์เซลล์ 50,000 บาท สรุปล่าสุด: ข้อเสนอขยายให้ติดบนดิน-ลอยน้ำ ลงทะเบียนได้เมื่อไหร่'
+desc4 = 'สรุปข้อเสนอเงินอุดหนุนโซลาร์เซลล์ 50,000 บาท 1.5 ล้านหลัง ขยายให้ติดบนพื้นดินและโซลาร์ลอยน้ำได้ สถานะยังรอ ครม. คาดว่าเปิดลงทะเบียน 1 พ.ย. 69 ควรเตรียมอะไร'
+date4 = '2026-10-05T09:00:00+07:00'
+ld_faq4 = {"@context": "https://schema.org", "@type": "FAQPage",
+           "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq4]}
+post_page(slug4, t4, desc4, date4, date4, body4, f'/img/blog/{slug4}.webp', (1200, 630), og=f'/img/blog/{slug4}/cover.jpg',
+          ld_type='Article', extra_ld=[ld_faq4] if faq4 else [],
+          seo_title='เงินอุดหนุนโซลาร์เซลล์ 50,000 บาท ล่าสุด ลงทะเบียนเมื่อไหร่',
+          cover_alt='สรุปข้อเสนอเงินอุดหนุนโซลาร์เซลล์ภาคครัวเรือน 50,000 บาทต่อหลัง ติดได้บนหลังคา พื้นดิน หรือลอยน้ำ (ยังรอ ครม.)')
+posts.append((slug4, t4, desc4, date4))
 
 # ---------------------------------------------------------------- blog index
 posts.sort(key=lambda p: p[3], reverse=True)
