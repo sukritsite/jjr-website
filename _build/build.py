@@ -313,7 +313,7 @@ ld_faq4 = {"@context": "https://schema.org", "@type": "FAQPage",
 post_page(slug4, t4, desc4, date4, date4, body4, f'/img/blog/{slug4}.webp', (1200, 630), og=f'/img/blog/{slug4}/cover.jpg',
           ld_type='Article', extra_ld=[ld_faq4] if faq4 else [],
           seo_title='เงินอุดหนุนโซลาร์เซลล์ 50,000 บาท ล่าสุด ลงทะเบียนเมื่อไหร่',
-          cover_alt='สรุปข้อเสนอเงินอุดหนุนโซลาร์เซลล์ภาคครัวเรือน 50,000 บาทต่อหลัง ติดได้บนหลังคา พื้นดิน หรือลอยน้ำ (ยังรอ ครม.)')
+          cover_alt='ข่าว มท. ลงนามขอใช้เงินกู้ 7.5 หมื่นล้าน ขยายกลุ่มอุดหนุนติดโซลาร์เซลล์บนดิน-ลอยน้ำ')
 posts.append((slug4, t4, desc4, date4))
 
 # ---------------------------------------------------------------- blog index
